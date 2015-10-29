@@ -56,9 +56,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             if (u.NodeType == ExpressionType.Convert
                 || u.NodeType == ExpressionType.ConvertChecked)
             {
-                if (_lambdaParams.Count > 0 && 
-                    _lambdaParams.Peek().Contains(u.Operand) &&
-                    u.Type.IsAssignableFrom(u.Operand.Type))
+                if (CanConvertBeRemoved(u))
                 {
                     return u.Operand;
                 }
@@ -108,6 +106,30 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             return b;
+        }
+
+        private static bool CanConvertBeRemoved(UnaryExpression convertExpression)
+        {
+            // The main purpose of this method is to remove superfluous casts that the roslyn 1.1 compiler emits
+
+            // This is a real cast.  It's not our problem.
+            if (!convertExpression.Type.IsAssignableFrom(convertExpression.Operand.Type))
+            {
+                return false;
+            }
+            
+            // If it's not a cast to a generic type it's not one of the errant roslyn casts
+            if (!convertExpression.Type.IsGenericType)
+            {
+                return false;
+            }
+            
+            // We can't remove autobox casts
+            if (typeof(Nullable<>) == convertExpression.Type.GetGenericTypeDefinition())
+            {
+                return false;
+            }
+            return true;
         }
 
         // <summary>

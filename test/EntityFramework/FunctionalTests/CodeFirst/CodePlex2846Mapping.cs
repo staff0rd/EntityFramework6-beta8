@@ -4,7 +4,7 @@ namespace System.Data.Entity.CodeFirst
     using System.Linq.Expressions;
     using Xunit;
 
-    public class CodePlex2846Mapping
+    public class CodePlex2846Mapping : TestBase
     {
         public class BaseClass
         {
