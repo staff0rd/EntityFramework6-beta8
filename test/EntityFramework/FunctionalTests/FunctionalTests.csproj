@@ -202,6 +202,7 @@
       <Link>Utilities\PropertyInfoExtensions.cs</Link>
     </Compile>
     <Compile Include="CodeFirst\CodePlex2169.cs" />
+    <Compile Include="CodeFirst\CodePlex2846Mapping.cs" />
     <Compile Include="CodeFirst\ConfigurationScenarioTests.cs" />
     <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />
     <Compile Include="CodeFirst\QueryCachingTests.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="ProductivityApi\SimpleScenariosForSqlCe35.cs" />
     <Compile Include="ProductivityApi\TemplateTests.cs" />
     <Compile Include="Query\Bug2612.cs" />
+    <Compile Include="Query\Codeplex2846Query.cs" />
     <Compile Include="Query\Bug952621.cs" />
     <Compile Include="Query\ComparisonTestst.cs" />
     <Compile Include="Query\ConditionalTranslatorTests.cs" />

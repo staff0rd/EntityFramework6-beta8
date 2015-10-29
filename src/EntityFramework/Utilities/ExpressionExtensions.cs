@@ -177,7 +177,7 @@ namespace System.Data.Entity.Utilities
 
                 propertyAccessExpression = memberExpression.Expression;
             }
-            while (memberExpression.Expression != parameterExpression);
+            while (memberExpression.Expression.RemoveConvert() != parameterExpression);
 
             return new PropertyPath(propertyInfos);
         }

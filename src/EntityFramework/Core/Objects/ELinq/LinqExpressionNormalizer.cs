@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -37,6 +38,33 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // to identify composite expression patterns.
         // </summary>
         private readonly Dictionary<Expression, Pattern> _patterns = new Dictionary<Expression, Pattern>();
+
+        private readonly Stack<IEnumerable<ParameterExpression>> _lambdaParams =
+            new Stack<IEnumerable<ParameterExpression>>(); 
+
+        
+        internal override Expression VisitLambda(LambdaExpression lambda)
+        {
+            _lambdaParams.Push(lambda.Parameters);
+            var e = base.VisitLambda(lambda);
+            _lambdaParams.Pop();
+            return e;
+        }
+
+        internal override Expression VisitUnary(UnaryExpression u)
+        {
+            if (u.NodeType == ExpressionType.Convert
+                || u.NodeType == ExpressionType.ConvertChecked)
+            {
+                if (_lambdaParams.Count > 0 && 
+                    _lambdaParams.Peek().Contains(u.Operand) &&
+                    u.Type.IsAssignableFrom(u.Operand.Type))
+                {
+                    return u.Operand;
+                }
+            }
+            return base.VisitUnary(u);
+        }
 
         // <summary>
         // Handle binary patterns:
