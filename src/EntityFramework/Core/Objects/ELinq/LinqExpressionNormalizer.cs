@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // If it's not a cast to a generic type it's not one of the errant roslyn casts
             if (!convertExpression.Type.IsGenericType)
             {
-                return false;
+                return true;
             }
             
             // We can't remove autobox casts
